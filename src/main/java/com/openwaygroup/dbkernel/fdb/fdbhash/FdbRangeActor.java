@@ -19,11 +19,14 @@ public class FdbRangeActor extends FdbActor {
     act.init(null, 0, prms.getKeyFrom(), prms.getKeyTo());
     
     final ExecutorService exec = Executors.newFixedThreadPool(prms.getThreads());
+    final int nQueriesToWait = prms.getMaxQueries() - 1;
+    final boolean locked = prms.isLocked();
+    final boolean system = prms.isSystem();
+    final int retries = prms.getRetries();
     
     final CloseableAsyncIterator<byte[]> boundaryKeys = LocalityUtil.getBoundaryKeys(ctx.db, prms.getKeyFrom(), prms.getKeyTo());
     byte[] lastKey = prms.getKeyFrom();
     final List<RangeAction> subTests = new LinkedList<>();
-    final int nQueriesToWait = prms.getMaxQueries() - 1;
     boolean hasNext;
     
     if (prms.isVerbose()) {
@@ -43,6 +46,18 @@ public class FdbRangeActor extends FdbActor {
 
 	sub.future = ctx.db.readAsync(
 	  (ReadTransaction tr) -> {
+	    final TransactionOptions opts = tr.options();
+	    
+	    if (locked) {
+	      opts.setReadLockAware();
+	    }
+	    if (system) {
+	      opts.setReadSystemKeys();
+	    }
+	    if (retries > 0) {
+	      opts.setRetryLimit(retries);
+	    }
+	    
 	    final AsyncIterable<KeyValue> kvsi = tr.getRange(keyFrom, keyTo);
 	    
 	    return AsyncUtil.forEach(kvsi, sub::processKv, exec);
@@ -54,8 +69,13 @@ public class FdbRangeActor extends FdbActor {
       }
       lastKey = keyTo;
     } while (hasNext);
-    waitUntilGreather(prms, subTests, 0);
-    exec.shutdownNow();
+    try {
+      waitUntilGreather(prms, subTests, 0);
+      exec.shutdownNow();
+    } catch (Throwable th) {
+      exec.shutdownNow();
+      throw th;
+    }
     return act.res;
   }
   

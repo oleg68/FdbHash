@@ -42,6 +42,12 @@ public class Main {
 	prms.verbose = true;
       } else if (sw.equals("subhash")) {
 	prms.subhash = true;
+      } else if (sw.equals("locked")) {
+	prms.locked = true;
+      } else if (sw.equals("system")) {
+	prms.system = true;
+      } else if (sw.equals("retries")) {
+	prms.retries = checkNext(prms.retries, "retries");
       } else if (sw.equals("help")) {
 	prms.actionType = ActionParameters.ActionType.HELP;
       } else {
@@ -60,6 +66,10 @@ public class Main {
       System.out.println("-max_queries N     Maximum outstanding queries. Default: 30");
       System.out.println("-v                 Output progress. Default: no");
       System.out.println("-subhash           Print hash for every subinterval queried. Default: no");
+      System.out.println("-locked            Query against locked database (eg dr site)");
+      System.out.println("-system            Query against the system key space (\\xff - \\xff\\xff)");
+      System.out.println("-subhash           Print hash for every subinterval queried. Default: no");
+      System.out.println("-retries N         Limit number of retries of each query on recoverable errors to N. Default: 3");
       System.out.println("-help              Print this information");
     }
     
@@ -99,6 +109,7 @@ public class Main {
       new Main(args).run();
     } catch (Throwable th) {
       th.printStackTrace();
+      System.exit(1);
     }
   }
   

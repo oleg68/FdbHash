@@ -6,6 +6,7 @@ public class ActionParameters {
   public static final byte[] KEY_TO_DFLT = {(byte) 0xff};
   public static final int THREADS_DFLT = 10;
   public static final int MAX_QUERIES_DFLT = 30;
+  public static final int RETRIES_DFLT = 3;
 
   public enum ActionType {HASH, HELP};
   
@@ -16,6 +17,9 @@ public class ActionParameters {
   int maxQueries = 0;
   boolean verbose = false;
   boolean subhash = false;
+  boolean locked = false;
+  boolean system = false;
+  int retries = 0;
   
   public ActionType getActionType() {
     return actionType;
@@ -43,6 +47,18 @@ public class ActionParameters {
   
   public boolean isSubhash() {
     return subhash;
+  }
+  
+  public boolean isLocked() {
+    return locked;
+  }
+
+  public boolean isSystem() {
+    return system;
+  }
+  
+  public int getRetries() {
+    return retries > 0 ? retries : RETRIES_DFLT;
   }
 }
 
