@@ -26,7 +26,9 @@ public class FdbRangeActor extends FdbActor {
     final int nQueriesToWait = prms.getMaxQueries() - 1;
     boolean hasNext;
     
-    act.log("boundaryKeys returned");
+    if (prms.isVerbose()) {
+      act.log("boundaryKeys returned");
+    }
     do {
       hasNext = boundaryKeys.hasNext();
 
@@ -34,8 +36,7 @@ public class FdbRangeActor extends FdbActor {
       final byte[] keyTo = hasNext ? boundaryKeys.next() : prms.getKeyTo();
 
       act.nRange ++;
-      waitUntilGreather(subTests, nQueriesToWait);
-      
+      waitUntilGreather(prms, subTests, nQueriesToWait);
       
       try {
 	final RangeAction sub = act.createSubrangeTest(act.nRange, keyFrom, keyTo);
@@ -53,18 +54,20 @@ public class FdbRangeActor extends FdbActor {
       }
       lastKey = keyTo;
     } while (hasNext);
-    waitUntilGreather(subTests, 0);
+    waitUntilGreather(prms, subTests, 0);
     exec.shutdownNow();
     return act.res;
   }
   
   private void waitUntilGreather(
-    List<RangeAction> subActs, int limit
+    final ActionParameters prms, List<RangeAction> subActs, int limit
   ) {
     while (subActs.size() > limit) {
       final RangeAction sub = subActs.remove(0);
       
-      act.log("waiting for {0}", sub.nRange);
+      if (prms.isVerbose()) {
+	act.log("waiting for {0}", sub.nRange);
+      }
       try {
 	if (sub.future != null) {
 	  sub.future.get();
@@ -72,8 +75,15 @@ public class FdbRangeActor extends FdbActor {
       } catch (InterruptedException | ExecutionException ex) {
 	throw new RuntimeException(ex);
       }
+      
+      final String subHash = prms.isSubhash() ? sub.res.toString() : "";
+      
+      if (prms.isVerbose()) {
+	act.log("got result of {0} {1}", sub.nRange, subHash);
+      } else if (! subHash.isEmpty()) {
+	System.out.println(subHash);
+      }
       act.mergeSubResult(sub);
-      act.log("got result of {0}", sub.nRange);
     }
   }
  

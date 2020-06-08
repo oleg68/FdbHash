@@ -14,6 +14,8 @@ public class ActionParameters {
   byte[] keyTo;
   int threads = 0;
   int maxQueries = 0;
+  boolean verbose = false;
+  boolean subhash = false;
   
   public ActionType getActionType() {
     return actionType;
@@ -33,6 +35,14 @@ public class ActionParameters {
 
   public int getMaxQueries() {
     return maxQueries > 0 ? maxQueries : MAX_QUERIES_DFLT;
+  }
+  
+  public boolean isVerbose() {
+    return verbose;
+  }
+  
+  public boolean isSubhash() {
+    return subhash;
   }
 }
 

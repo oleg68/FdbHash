@@ -2,6 +2,8 @@ package com.openwaygroup.dbkernel.fdb.fdbhash;
 
 import java.io.ByteArrayOutputStream;
 
+import com.apple.foundationdb.tuple.ByteArrayUtil;
+
 public class PrintableConverter {
   
   public static boolean isPrintableAscii(char ch) {
@@ -18,19 +20,7 @@ public class PrintableConverter {
   }  
   
   public static String bytesToString(final byte[] bytes) {
-    final StringBuilder sb = new StringBuilder();
-    final int n = bytes.length;
-    
-    for (int i = 0; i < n; i ++) {
-      final byte b = bytes[i];
-      
-      if (isPrintableAscii((char) b)) {
-	sb.append((char)b);
-      } else {
-	sb.append("\\x").append(byteToHex(b));
-      }
-    }
-    return sb.toString();
+    return ByteArrayUtil.printable(bytes);
   }
   
   public static byte[] stringToBytes(final String str) {

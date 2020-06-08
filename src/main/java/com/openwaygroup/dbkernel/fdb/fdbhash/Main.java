@@ -38,6 +38,10 @@ public class Main {
 	prms.threads = checkNext(prms.threads, "threads");
       } else if (sw.equals("max_queries")) {
 	prms.maxQueries = checkNext(prms.maxQueries, "max_queries");
+      } else if (sw.equals("v")) {
+	prms.verbose = true;
+      } else if (sw.equals("subhash")) {
+	prms.subhash = true;
       } else if (sw.equals("help")) {
 	prms.actionType = ActionParameters.ActionType.HELP;
       } else {
@@ -53,7 +57,9 @@ public class Main {
       System.out.println("-from Key          Beginning key. Default: \\x00");
       System.out.println("-to Key            Ending key. Default: \\xff");
       System.out.println("-threads N         Number of parallel threads. Default: 10");
-      System.out.println("-max_queries       Maximum outstanding queries. Default: 30");
+      System.out.println("-max_queries N     Maximum outstanding queries. Default: 30");
+      System.out.println("-v                 Output progress. Default: no");
+      System.out.println("-subhash           Print hash for every subinterval queried. Default: no");
       System.out.println("-help              Print this information");
     }
     

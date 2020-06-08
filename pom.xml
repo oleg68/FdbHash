@@ -27,7 +27,7 @@
 	    <archive>
 	      <manifest>
 		<addClasspath>true</addClasspath>
-		<mainClass>com.openwaygroup.dbkernel.fdb.fdbtesting.Main</mainClass>
+		<mainClass>com.openwaygroup.dbkernel.fdb.fdbhash.Main</mainClass>
                 <classpathPrefix>lib/</classpathPrefix>
 	      </manifest>
 	    </archive>
