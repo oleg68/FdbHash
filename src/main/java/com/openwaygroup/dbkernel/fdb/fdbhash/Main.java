@@ -46,6 +46,8 @@ public class Main {
 	prms.locked = true;
       } else if (sw.equals("system")) {
 	prms.system = true;
+      } else if (sw.equals("debug")) {
+	prms.debug = true;
       } else if (sw.equals("retries")) {
 	prms.retries = checkNext(prms.retries, "retries");
       } else if (sw.equals("help")) {

@@ -19,6 +19,7 @@ public class ActionParameters {
   boolean subhash = false;
   boolean locked = false;
   boolean system = false;
+  boolean debug = false;
   int retries = 0;
   
   public ActionType getActionType() {

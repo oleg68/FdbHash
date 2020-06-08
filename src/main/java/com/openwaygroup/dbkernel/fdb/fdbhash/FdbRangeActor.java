@@ -33,16 +33,34 @@ public class FdbRangeActor extends FdbActor {
       act.log("boundaryKeys returned");
     }
     do {
+      if (prms.debug) {
+	act.log("querying hasNext");
+      }
+
       hasNext = boundaryKeys.hasNext();
+
+      if (prms.debug) {
+	act.log("queried hasNext");
+      }
 
       final byte[] keyFrom = lastKey;
       final byte[] keyTo = hasNext ? boundaryKeys.next() : prms.getKeyTo();
 
       act.nRange ++;
+      if (prms.debug) {
+	act.log("waiting");
+      }
       waitUntilGreather(prms, subTests, nQueriesToWait);
       
+      if (prms.debug) {
+	act.log("waited");
+      }
       try {
 	final RangeAction sub = act.createSubrangeTest(act.nRange, keyFrom, keyTo);
+
+	if (prms.debug) {
+	  act.log("launching");
+	}
 
 	sub.future = ctx.db.readAsync(
 	  (ReadTransaction tr) -> {
@@ -64,6 +82,9 @@ public class FdbRangeActor extends FdbActor {
 	  }, exec
 	);
 	subTests.add(sub);
+	if (prms.debug) {
+	  act.log("launched");
+	}
       } catch (ReflectiveOperationException ex) {
 	throw new RuntimeException(ex);
       }
