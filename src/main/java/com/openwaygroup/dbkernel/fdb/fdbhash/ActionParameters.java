@@ -8,7 +8,7 @@ public class ActionParameters {
   public static final int MAX_QUERIES_DFLT = 30;
   public static final int RETRIES_DFLT = 3;
 
-  public enum ActionType {HASH, HELP};
+  public enum ActionType {HASH, HELP, COMPARE};
   
   ActionType actionType = ActionType.HASH;
   byte[] keyFrom;
@@ -16,7 +16,7 @@ public class ActionParameters {
   int threads = 0;
   int maxQueries = 0;
   boolean verbose = false;
-  boolean subhash = false;
+  boolean subres = false;
   boolean locked = false;
   boolean system = false;
   boolean debug = false;
@@ -46,8 +46,8 @@ public class ActionParameters {
     return verbose;
   }
   
-  public boolean isSubhash() {
-    return subhash;
+  public boolean isSubres() {
+    return subres;
   }
   
   public boolean isLocked() {

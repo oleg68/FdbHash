@@ -32,7 +32,7 @@ public abstract class RangeAction implements KvProcessor {
   public final RangeAction createSubrangeTest(final int nRange, byte[] keyFrom, byte[] keyTo)
     throws ReflectiveOperationException
   {
-    final HashAction subTest = (HashAction) getClass().getDeclaredConstructor().newInstance();
+    final RangeAction subTest = (RangeAction) getClass().getDeclaredConstructor().newInstance();
     
     subTest.init(this, nRange, keyFrom, keyTo);
     return subTest;

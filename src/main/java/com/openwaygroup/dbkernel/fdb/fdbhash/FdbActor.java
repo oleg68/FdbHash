@@ -8,7 +8,7 @@ public abstract class FdbActor {
     this.ctx = ctx;
   }
   
-  public abstract ActionResult doAction(ActionParameters prms);
+  public abstract ActionResult doAction(ActionParameters prms) throws Exception;
 
   public void cleanup() {
     ctx = null;

@@ -5,6 +5,7 @@ import java.util.*;
 public class Main {
 
   final FdbConnectionParameters connPrms = new FdbConnectionParameters();
+  final FdbConnectionParameters auxConnPrms = new FdbConnectionParameters();
   final ActionParameters prms = new ActionParameters();
   final ParameterParser prs;
   
@@ -30,6 +31,8 @@ public class Main {
     void consumeSwitch(final String sw) {
       if (sw.equals("C")) {
 	connPrms.clusterFile = checkNext(connPrms.clusterFile, "C");
+      } else if (sw.equals("A")) {
+	auxConnPrms.clusterFile = checkNext(auxConnPrms.clusterFile, "A");
       } else if (sw.equals("from")) {
 	prms.keyFrom = PrintableConverter.stringToBytes(checkNext(prms.keyFrom, "from"));
       } else if (sw.equals("to")) {
@@ -40,8 +43,8 @@ public class Main {
 	prms.maxQueries = checkNext(prms.maxQueries, "max_queries");
       } else if (sw.equals("v")) {
 	prms.verbose = true;
-      } else if (sw.equals("subhash")) {
-	prms.subhash = true;
+      } else if (sw.equals("subres")) {
+	prms.subres = true;
       } else if (sw.equals("locked")) {
 	prms.locked = true;
       } else if (sw.equals("system")) {
@@ -70,7 +73,7 @@ public class Main {
       System.out.println("-subhash           Print hash for every subinterval queried. Default: no");
       System.out.println("-locked            Query against locked database (eg dr site)");
       System.out.println("-system            Query against the system key space (\\xff - \\xff\\xff)");
-      System.out.println("-subhash           Print hash for every subinterval queried. Default: no");
+      System.out.println("-subres            Print result for every subinterval queried. Default: no");
       System.out.println("-retries N         Limit number of retries of each query on recoverable errors to N. Default: 3");
       System.out.println("-help              Print this information");
     }
@@ -102,7 +105,13 @@ public class Main {
     }
     
     void consumeArg(final String arg) {
-      throw new IllegalArgumentException("Invalid arg: " + arg);
+      if (arg.endsWith("hash")) {
+	prms.actionType = ActionParameters.ActionType.HASH;
+      } else if (arg.endsWith("compare")) {
+	prms.actionType = ActionParameters.ActionType.COMPARE;
+      } else {
+	throw new IllegalArgumentException("Invalid action type: " + arg);
+      }
     }
   }
 
@@ -120,7 +129,7 @@ public class Main {
     prs.parseParameters();
   }
   
-  void run() {
+  void run() throws Exception {
     switch (prms.actionType) {
       case HASH:
 	System.out.println("ClusterFile=" + connPrms.clusterFile);
@@ -129,6 +138,24 @@ public class Main {
 	  final FdbActor actor = new HashActor();
 
 	  actor.setup(ctx);
+
+	  final ActionResult res = actor.doAction(prms);
+
+	  System.out.println(res.toString());
+	  actor.cleanup();
+	}
+	break;
+      case COMPARE:
+	System.out.println("ClusterFile=" + connPrms.clusterFile);
+	System.out.println("auxClusterFile=" + auxConnPrms.clusterFile);
+	try (
+	  FdbContext ctx = new FdbContext(connPrms);
+	  FdbContext auxCtx = new FdbContext(auxConnPrms)
+	) {
+
+	  final CompareActor actor = new CompareActor();
+
+	  actor.setup(ctx, auxCtx);
 
 	  final ActionResult res = actor.doAction(prms);
 

@@ -42,15 +42,12 @@ public class HashResult implements RangeResult {
   }
 
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-
-    sb.append(PrintableConverter.bytesToString(keyFrom)).append('\n');
-    sb.append(PrintableConverter.bytesToString(keyTo)).append('\n');
-    sb.append(Long.toString(cnt));
+    return RangeResult.toString(keyFrom, keyTo, getResStr());
+  }
+  
+  public String getResStr() {
     return MessageFormat.format(
-      "{0} {1} {2, number, #} {3, number, #} {4, number, #}",
-      PrintableConverter.bytesToString(keyFrom),
-      PrintableConverter.bytesToString(keyTo),
+      "{0, number, #} {1, number, #} {2, number, #}",
       cnt, keyHash, valueHash
     );
   }

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.openwaygroup.dbkernel.fdb</groupId>
     <artifactId>fdb-hash</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -53,4 +53,5 @@
 	</plugin>
       </plugins>
     </build>
-   </project>
+    <name>FdbHash</name>
+</project>
