@@ -96,14 +96,16 @@ public class FdbRangeActor extends FdbActor {
       if (prms.debug) {
 	act.log("{0}: waiting getBoundaryKeys", logPrefix);
       }
-      final Iterator<byte[]> boundaryKeyI = boundaryKeyListF.get().iterator();
+
+      final List<byte[]> boundaryKeyList = boundaryKeyListF.get();
+      
       if (prms.debug) {
 	act.log("{0}: received getBoundaryKeys", logPrefix);
       }
       if (prms.isVerbose()) {
-	act.log("{0}: boundaryKeys returned", logPrefix);
+	act.log("{0}: boundaryKeys returned {1} keys", logPrefix, boundaryKeyList.size());
       }
-      return boundaryKeyI;
+      return boundaryKeyList.iterator();
     } catch (InterruptedException | ExecutionException ex) {
       throw new RuntimeException(ex);
     }
