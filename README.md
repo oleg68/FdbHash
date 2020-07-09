@@ -14,7 +14,7 @@ A tool for calculating checksums and comparing two foundationdb databases
 # Deploying
 1. Make a directory for deploying. It is named as ``Delploy Directory``.
 2. Make a subdirectory ``lib`` of ``Delploy Directory``.
-3. Copy fdb-hash-0.2.jar from .m2/repository/com/openwaygroup/dbkernel/fdb/fdb-hash/0.2/ subdirectory of your home directory to ``Delploy Directory``.
+3. Copy fdb-hash-0.2.1.jar from .m2/repository/com/openwaygroup/dbkernel/fdb/fdb-hash/0.2.1/ subdirectory of your home directory to ``Delploy Directory``.
 4. Copy target/lib/fdb-java-6.2.10.jar to ``Delploy Directory``/lib
 
 # Usage
