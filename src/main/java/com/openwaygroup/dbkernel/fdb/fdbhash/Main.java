@@ -1,5 +1,6 @@
 package com.openwaygroup.dbkernel.fdb.fdbhash;
 
+import java.io.*;
 import java.util.*;
 
 public class Main {
@@ -60,24 +61,6 @@ public class Main {
       }
     }
     
-    void printUsage() {
-      System.out.println("Calculating hashsum of the fdb instance");
-      System.out.println("Usage: java -jar fdb-hash {options}...");
-      System.out.println("Options are:");
-      System.out.println("-C ClusterFile     Path to the fdb cluster file. Default: uses FDB_CLUSER_FILE environment variable");
-      System.out.println("-from Key          Beginning key. Default: \\x00");
-      System.out.println("-to Key            Ending key. Default: \\xff");
-      System.out.println("-threads N         Number of parallel threads. Default: 10");
-      System.out.println("-max_queries N     Maximum outstanding queries. Default: 30");
-      System.out.println("-v                 Output progress. Default: no");
-      System.out.println("-subhash           Print hash for every subinterval queried. Default: no");
-      System.out.println("-locked            Query against locked database (eg dr site)");
-      System.out.println("-system            Query against the system key space (\\xff - \\xff\\xff)");
-      System.out.println("-subres            Print result for every subinterval queried. Default: no");
-      System.out.println("-retries N         Limit number of retries of each query on recoverable errors to N. Default: 3");
-      System.out.println("-help              Print this information");
-    }
-    
     String checkNext(final Object oldV, final String argName) {
       if (oldV != null) {
 	throw new IllegalArgumentException("Duplicate " + argName);
@@ -129,6 +112,25 @@ public class Main {
     prs.parseParameters();
   }
   
+  static void printUsage() throws IOException {
+    try (InputStream is = Main.class.getResourceAsStream("/usage.txt")) {
+      copyStream(is, System.out);
+    }
+  }
+
+  public static void copyStream(InputStream input, OutputStream output) throws IOException {
+    final int READ_BUFFER_SIZE = 4096;
+
+    byte[] buffer = new byte[READ_BUFFER_SIZE];
+    while (true) {
+      int count = input.read(buffer);
+      if (count == -1) {
+	break;
+      }
+      output.write(buffer, 0, count);
+    }
+  }    
+
   void run() throws Exception {
     switch (prms.actionType) {
       case HASH:
@@ -164,7 +166,7 @@ public class Main {
 	}
 	break;
       case HELP:
-	prs.printUsage();
+	printUsage();
 	break;
     }
   }

@@ -1,0 +1,29 @@
+Calculate hash of the fdb instance or compare two fdb instances
+Usage: java -jar fdb-hash {options}... {command}
+
+Options are:
+-C ClusterFile     Path to the fdb cluster file. Default: uses FDB_CLUSER_FILE environment variable
+-A ClusterFile     Path to the fdb cluster file of auxiliary database (for compare)
+-from Key          Beginning key. Default: \\x00
+-to Key            Ending key. Default: \\xff
+-threads N         Number of parallel threads. Default: 10
+-max_queries N     Maximum outstanding queries. Default: 30
+-v                 Output progress. Default: no
+-locked            Query against a locked database (eg dr site)
+-system            Query against a system key space (\\xff - \\xff\\xff)
+-subres            Print result for every subinterval queried. Default: no
+-retries N         Limit number of retries of each query on recoverable errors to N. Default: 3
+-help              Print this information
+
+Commands are:
+hash               Count keys and calculate their checksum (default)
+compare            Compare two databases. Requires passing a path to the cluster file of auxiliary database with -A option
+
+Examples:
+java -jar fdb-hash-0.2.jar
+    Count the keys and calculate their checksum of the fdb cluster provided by FDB_CLUSTER_FILE environment variable
+java -jar fdb-hash-0.2.jar -C fdb-primary.cluster -locked compare -A fdb-dr.cluster -subres
+    Compare the primary and DR fdb cluster. Print subresult for each key range
+java -jar fdb-hash-0.2.jar -C fdb-primary.cluster -locked compare -A fdb-dr.cluster -subres -from Key0 -to Key9
+    Compare the subrange Key0 - Key9 of primary and DR fdb cluster. Print subresult for each key subrange
+
