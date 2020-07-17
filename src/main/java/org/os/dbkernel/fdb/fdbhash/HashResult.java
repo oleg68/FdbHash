@@ -1,4 +1,4 @@
-package com.openwaygroup.dbkernel.fdb.fdbhash;
+package org.os.dbkernel.fdb.fdbhash;
 
 import java.util.zip.CRC32;
 import java.text.MessageFormat;

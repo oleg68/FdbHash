@@ -1,7 +1,7 @@
-package com.openwaygroup.dbkernel.fdb.fdbhash;
+package org.os.dbkernel.fdb.fdbhash;
 
 import com.apple.foundationdb.tuple.ByteArrayUtil;
-import static com.openwaygroup.dbkernel.fdb.fdbhash.FdbRangeActor.launchProcessRange;
+import static org.os.dbkernel.fdb.fdbhash.FdbRangeActor.launchProcessRange;
 import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;

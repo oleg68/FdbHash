@@ -1,4 +1,4 @@
-package com.openwaygroup.dbkernel.fdb.fdbhash;
+package org.os.dbkernel.fdb.fdbhash;
 
 public class CompareActor extends FdbDoubleRangeActor {
   public CompareActor() {

@@ -1,10 +1,11 @@
-package com.openwaygroup.dbkernel.fdb.fdbhash;
+package org.os.dbkernel.fdb.fdbhash;
 
-public class HashAction extends RangeAction {
-
+public class CompareAction extends DoubleRangeAction {
+  
   public void init(RangeAction parent, int nRange, byte[] keyFrom, byte[] keyTo) {
-    res = new HashResult();
+    res = new CompareResult();
     res.init(keyFrom, keyTo);
     super.init(nRange, res);
   }
+
 }
